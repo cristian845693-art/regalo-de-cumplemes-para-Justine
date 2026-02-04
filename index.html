@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi niña favorita</title>
+    <style>
+        body {
+            background-color: #ffebee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+
+        .envelope {
+            position: relative;
+            width: 250px;
+            height: 180px;
+            background: #ff8a80;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .envelope:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            border-left: 125px solid transparent;
+            border-right: 125px solid transparent;
+            border-top: 100px solid #ff5252;
+            transform-origin: top;
+            transition: transform 0.5s;
+        }
+
+        .letter {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            width: 210px;
+            height: 150px;
+            background: white;
+            padding: 15px;
+            box-sizing: border-box;
+            transition: transform 0.5s;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .letter img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Animación al abrir */
+        .open .envelope:before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .open .letter {
+            transform: translateY(-100px);
+            z-index: 1;
+            height: 250px;
+        }
+
+        /* Corazones flotantes */
+        .heart {
+            position: absolute;
+            color: #ff5252;
+            font-size: 20px;
+            animation: float 3s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="envelope-wrapper" onclick="this.classList.toggle('open')">
+    <div class="envelope"></div>
+    <div class="letter">
+        <img src="https://via.placeholder.com/150" alt="Nosotros">
+        <p>❤️</p>
+        <p style="font-size: 14px; color: #333;">
+            ¡Feliz cumple mes! <br> 
+            Eres lo mejor que me ha pasado.
+        </p>
+    </div>
+</div>
+
+<script>
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+    }
+    setInterval(createHeart, 300);
+</script>
+
+</body>
+</html>
