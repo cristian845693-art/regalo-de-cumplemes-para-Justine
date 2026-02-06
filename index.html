@@ -26,6 +26,15 @@
             justify-content: center;
         }
 
+        /* --- ESTILO PARA EL NOMBRE --- */
+        .name-style {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3em;
+            color: var(--color-tapa);
+            font-weight: bold;
+            vertical-align: middle;
+        }
+
         /* --- CORAZONES FLOTANTES --- */
         .floating-heart {
             position: fixed;
@@ -89,7 +98,7 @@
         .photo:hover {
             animation: none !important;
             z-index: 6000 !important;
-            transform: scale(2.8) rotate(0deg) translate3d(0,0,0) !important; 
+            transform: scale(3.5) rotate(0deg) translate3d(0,0,0) !important; 
             box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
 
@@ -123,6 +132,7 @@
             border-bottom: 100px solid var(--color-sobre);
         }
 
+        /* --- CARTA --- */
         .letter {
             position: absolute;
             bottom: 10px; left: 10px;
@@ -141,8 +151,11 @@
             width: 100%; height: 100%;
             overflow-y: auto;
             padding-right: 5px;
-            text-align: center;
         }
+
+        /* Scrollbar estética */
+        .letter-content::-webkit-scrollbar { width: 4px; }
+        .letter-content::-webkit-scrollbar-thumb { background: var(--color-tapa); border-radius: 10px; }
 
         .open::before { transform: rotateX(180deg); }
         .open .letter {
@@ -154,9 +167,32 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
-        .letter img { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid var(--color-fondo); }
-        .letter h3 { font-family: 'Dancing Script', cursive; font-size: 22px; color: var(--color-tapa); margin: 0; }
-        .letter p { font-size: 13px; color: #555; line-height: 1.4; }
+        .letter img { 
+            display: block;
+            margin: 0 auto 10px;
+            width: 85px; height: 85px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 2px solid var(--color-fondo); 
+        }
+
+        .letter h3 { 
+            text-align: center;
+            font-family: 'Dancing Script', cursive; 
+            font-size: 22px; 
+            color: var(--color-tapa); 
+            margin: 0 0 10px 0; 
+        }
+
+        /* TEXTO JUSTIFICADO */
+        .letter p { 
+            font-size: 13px; 
+            color: #555; 
+            line-height: 1.5; 
+            text-align: justify; /* JUSTIFICACIÓN */
+            hyphens: auto;
+            margin: 0;
+        }
 
         @media (max-width: 768px) {
             #gallery-container { 
@@ -189,39 +225,41 @@
     </audio>
 
     <div id="timer-container">
-        <div id="timer">Cargando nuestro tiempo...</div>
+        <div id="timer">Llevamos: ...</div>
     </div>
 
     <div id="gallery-container"></div>
 
-   <div class="envelope-wrapper" id="envelope" onclick="manejarApertura()">
-    <div class="envelope-front"></div>
-    <div class="letter">
-        <div class="letter-content">
-            <img src="img/nosotros.jpeg" alt="Nosotros">
-            <h3>¡Feliz primer mes!</h3>
-            <p>
-                <b>Mi niña hermosa, <span class="name-style">Justine</span> ❤️</b><br><br>
-                
-                Me robé un pedacito de internet para escribirte algo bonito, ya que hoy nos toca vivir este momento de forma virtual. Pero déjame decirte que, aunque estemos a la distancia, te siento más cerca que nunca. Te amo mucho.<br><br>
-                
-                Ojalá no te parezca muy "mamón" esto, mi amor, pero va con todo mi cariño. <br><br>
+    <div class="envelope-wrapper" id="envelope" onclick="manejarApertura()">
+        <div class="envelope-front"></div>
+        <div class="letter">
+            <div class="letter-content">
+                <img src="img/nosotros.jpeg" alt="Nosotros">
+                <h3>¡Feliz primer mes!</h3>
+                <p>
+                    <b>Mi niña hermosa, <span class="name-style">Justine</span> ❤️</b><br><br>
+                    
+                    Me robé un pedacito de internet para escribirte algo bonito, ya que hoy nos toca vivir este momento de forma virtual. Pero déjame decirte que, aunque estemos a la distancia, te siento más cerca que nunca. Te amo mucho.<br><br>
+                    
+                    Ojalá no te parezca muy "mamón" esto, mi amor, pero va con todo mi cariño. <br><br>
 
-                <span class="name-style">Justine</span>, parece increíble que ya haya pasado un mes desde que comenzamos esta linda aventura; desde que te conocí, ¡el tiempo a tu lado pasa volando! <br><br>
-                
-                Cada día ha sido especial. He podido conocer tu lado tierno y vulnerable, tus delirios y la cotidianidad compartiendo con tu familia. Sin duda, cada día me enamoro más de ti y de tu forma de ser con la gente que te rodea.<br><br>
+                    <span class="name-style">Justine</span>, parece increíble que ya haya pasado un mes desde que comenzamos esta linda aventura; desde que te conocí, ¡el tiempo a tu lado pasa volando! <br><br>
+                    
+                    Cada día ha sido especial. He podido conocer tu lado tierno y vulnerable, tus delirios y la cotidianidad compartiendo con tu familia. Sin duda, cada día me enamoro más de ti y de tu forma de ser con la gente que te rodea.<br><br>
 
-                Eres una persona hermosa que siempre se preocupa por los demás; eres atenta, cariñosa y contagias alegría con tu sonrisa (y tus delirios, JAJAJA). Valoro muchísimo que estés presente en mi vida.<br><br>
+                    Eres una persona hermosa que siempre se preocupa por los demás; eres atenta, cariñosa y contagias alegría con tu sonrisa (y tus delirios, JAJAJA). Valoro muchísimo que estés presente en mi vida.<br><br>
 
-                Como tú sabes, genuinamente me gusta sacar fotos y guardar todos nuestros momentos. Siempre las veo para recordar lo feliz que me haces a diario, y ojalá estas fotos también te recuerden lo mismo a ti.<br><br>
+                    Como tú sabes, genuinamente me gusta sacar fotos y guardar todos nuestros momentos. Siempre las veo para recordar lo feliz que me haces a diario, y ojalá estas fotos también te recuerden lo mismo a ti.<br><br>
 
-                Gracias por estar conmigo y por cada momento compartido. <br>
-                <b>Te amo, <span class="name-style">Justine</span> ❤️</b>
-            </p>
-            <p style="font-size: 11px; color: #aaa; margin-top: 15px;">(Desliza para leer más)</p>
+                    Gracias por estar conmigo y por cada momento compartido. <br><br>
+                    <span style="display: block; text-align: center;">
+                        <b>Te amo, <span class="name-style">Justine</span> ❤️</b>
+                    </span>
+                </p>
+                <p style="font-size: 11px; color: #aaa; margin-top: 15px; text-align: center;">(Desliza para leer más)</p>
+            </div>
         </div>
     </div>
-</div>
 
     <script>
         const startDate = new Date(2026, 0, 7, 0, 0); 
@@ -263,7 +301,6 @@
             document.getElementById('timer').innerHTML = `Llevamos: ${d}d ${h}h ${m}m ${s}s`;
         }
 
-        // --- FUNCIÓN DE LOS CORAZONES ---
         function createHeart() {
             const heart = document.createElement('div');
             heart.className = 'floating-heart';
@@ -308,7 +345,7 @@
         window.onload = () => {
             generarGaleria();
             setInterval(updateTimer, 1000);
-            setInterval(createHeart, 400); // Lanza corazones cada 400ms
+            setInterval(createHeart, 400);
             updateTimer();
         };
     </script>
