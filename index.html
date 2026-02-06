@@ -29,10 +29,10 @@
         /* --- CONTADOR --- */
         #timer-container {
             position: absolute;
-            top: 15px;
+            top: 20px;
             text-align: center;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.8);
             padding: 8px 25px;
             border-radius: 50px;
             backdrop-filter: blur(10px);
@@ -40,117 +40,113 @@
         }
         #timer { font-weight: 600; color: #444; font-size: 14px; }
 
-        /* --- CONTENEDOR DE GALERÍA --- */
+        /* --- GALERÍA PROLIJA --- */
         #gallery-container {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: grid;
-            /* Grilla de 6x5 para tener espacio de sobra */
-            grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            padding: 40px;
+            /* Grilla de 5x4 con espacio de seguridad en los bordes */
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            padding: 60px; /* Margen para que no se corten al agrandar */
             box-sizing: border-box;
-            gap: 15px;
-            pointer-events: none;
+            gap: 20px;
         }
 
         .photo-slot {
             display: flex;
             align-items: center;
             justify-content: center;
-            pointer-events: none;
+            position: relative;
         }
 
         .photo {
-            width: 120px; 
+            width: 130px; 
             background: white;
             padding: 6px 6px 18px 6px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
             z-index: 5;
-            pointer-events: auto;
+            /* Evita que se corten al reescalar */
+            backface-visibility: hidden;
         }
 
         .photo img {
             width: 100%;
-            height: 100px;
+            height: 110px;
             object-fit: cover;
             border-radius: 2px;
-            image-rendering: high-quality;
+            image-rendering: -webkit-optimize-contrast;
         }
 
+        /* Efecto al pasar el mouse: se agranda y se endereza */
         .photo:hover {
             z-index: 2000 !important;
-            transform: scale(3.2) rotate(0deg) !important;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            transform: scale(2.8) rotate(0deg) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
         /* --- SOBRE (CENTRO) --- */
         .envelope-wrapper {
             position: relative;
-            width: 260px;
-            height: 180px;
+            width: 280px;
+            height: 200px;
             background: var(--color-sobre);
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             z-index: 500;
             cursor: pointer;
-            margin-top: 60px;
+            margin-top: 40px;
         }
 
         .envelope-wrapper::before {
             content: "";
             position: absolute; top: 0; z-index: 35;
-            border-left: 130px solid transparent;
-            border-right: 130px solid transparent;
-            border-top: 100px solid var(--color-tapa);
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 110px solid var(--color-tapa);
             transform-origin: top;
             transition: transform 0.5s ease;
         }
 
         .envelope-front {
             position: absolute; bottom: 0; z-index: 30;
-            border-left: 130px solid transparent;
-            border-right: 130px solid transparent;
-            border-bottom: 100px solid var(--color-sobre);
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-bottom: 110px solid var(--color-sobre);
         }
 
         .letter {
             position: absolute; bottom: 10px; left: 10px;
-            width: 240px; height: 160px; background: white;
+            width: 260px; height: 180px; background: white;
             z-index: 20; padding: 20px; box-sizing: border-box;
-            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 5px;
+            transition: all 0.7s ease; border-radius: 5px;
             text-align: center; opacity: 0; visibility: hidden;
         }
 
         .open::before { transform: rotateX(180deg); }
         .open .letter {
-            transform: translateY(-140px) scale(1.4);
+            transform: translateY(-150px) scale(1.3);
             z-index: 3000; opacity: 1; visibility: visible;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            height: 340px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            height: 350px;
         }
 
-        .letter img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-fondo); }
-        .letter h3 { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--color-tapa); margin: 10px 0 5px; }
-        .letter p { font-size: 13px; color: #555; line-height: 1.4; margin: 0; }
+        .letter img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 3px solid var(--color-fondo); }
+        .letter h3 { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--color-tapa); margin: 0; }
+        .letter p { font-size: 13px; color: #555; line-height: 1.5; }
 
-        /* --- RESPONSIVIDAD --- */
         @media (max-width: 768px) {
-            #gallery-container {
-                grid-template-columns: repeat(3, 1fr); /* 3 columnas en celu */
-                grid-template-rows: repeat(8, 1fr);
-                padding: 10px;
-            }
-            .photo { width: 80px; padding: 4px 4px 12px 4px; }
-            .photo img { height: 70px; }
-            .photo:hover { transform: scale(2.5) !important; }
-            .envelope-wrapper { transform: scale(0.75); margin-top: 100px; }
-            .open .letter { transform: translateY(-110px) scale(1.1); width: 280px; left: -10px; }
+            #gallery-container { grid-template-columns: repeat(3, 1fr); padding: 40px 10px; gap: 10px; }
+            .photo { width: 85px; padding: 4px 4px 12px 4px; }
+            .photo img { height: 75px; }
+            .photo:hover { transform: scale(2.2) !important; }
+            .envelope-wrapper { transform: scale(0.8); }
         }
 
         .confetti { position: absolute; width: 8px; height: 8px; z-index: 4000; border-radius: 50%; }
@@ -166,18 +162,19 @@
         <div id="timer">Cargando tiempo...</div>
     </div>
 
-    <div id="gallery-container"></div>
+    <div id="gallery-container">
+        </div>
 
     <div class="envelope-wrapper" id="envelope" onclick="manejarApertura()">
         <div class="envelope-front"></div>
         <div class="letter">
-            <div class="letter-content" style="height: 100%; overflow-y: auto;">
+            <div class="letter-content">
                 <img src="img/nosotros.jpeg" alt="Nosotros">
                 <h3>¡Feliz primer mes!</h3>
                 <p>
                     <b>Mi niña hermosa,</b><br>
                     Parece increíble que ya haya pasado un mes desde aquel 7 de enero de 2026. <br><br>
-                    Quise juntar aquí estos 19 recuerdos porque cada segundo contigo es un regalo. ❤️
+                    Cada una de estas 19 fotos es un pedacito de lo feliz que me haces. Gracias por estar conmigo. ❤️
                 </p>
             </div>
         </div>
@@ -189,30 +186,29 @@
 
         function generarGaleria() {
             const container = document.getElementById('gallery-container');
-            const isMobile = window.innerWidth <= 768;
             
-            // Definimos qué espacios de la grilla saltar para dejar el centro libre
-            // Para 6x5 (30 celdas), las del centro son las columnas 3 y 4
-            const reservedSlots = isMobile ? [4, 5, 10, 11, 13, 14, 16, 17] : [8, 9, 14, 15, 20, 21, 2, 3, 4];
-            
-            let currentPhoto = 1;
-            const totalCells = isMobile ? 24 : 30;
-
-            for (let i = 0; i < totalCells; i++) {
+            for (let i = 1; i <= TOTAL_FOTOS; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'photo-slot';
                 
-                if (!reservedSlots.includes(i) && currentPhoto <= TOTAL_FOTOS) {
-                    const photo = document.createElement('div');
-                    photo.className = 'photo';
-                    
-                    const rotations = [-4, 3, -2, 4, -3, 2];
-                    photo.style.transform = `rotate(${rotations[i % rotations.length]}deg)`;
-                    
-                    photo.innerHTML = `<img src="img/foto${currentPhoto}.jpeg" alt="Foto ${currentPhoto}">`;
-                    slot.appendChild(photo);
-                    currentPhoto++;
+                // Evitar el centro (donde está el sobre)
+                // En una grilla de 5x4, los slots centrales son el 8, 12 y 13 aprox.
+                if (i === 8 || i === 12 || i === 13) {
+                    const spacer = document.createElement('div');
+                    container.appendChild(spacer);
                 }
+
+                const photo = document.createElement('div');
+                photo.className = 'photo';
+                
+                // Rotación fija "estilizada" (no azarosa cada vez)
+                const rotations = [-5, 3, -2, 4, -4, 2, -3, 5];
+                const r = rotations[i % rotations.length];
+                photo.style.transform = `rotate(${r}deg)`;
+                
+                photo.innerHTML = `<img src="img/foto${i}.jpeg" alt="Foto ${i}">`;
+                
+                slot.appendChild(photo);
                 container.appendChild(slot);
             }
         }
