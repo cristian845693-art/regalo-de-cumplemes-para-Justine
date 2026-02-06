@@ -20,9 +20,11 @@
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
             height: 100vh;
+            width: 100vw;
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: manipulation; /* Mejora la respuesta en celular */
         }
 
         /* --- CONTADOR --- */
@@ -30,15 +32,16 @@
             position: absolute;
             top: 20px;
             text-align: center;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 10px 20px;
+            z-index: 150; /* Muy por encima */
+            background: rgba(255, 255, 255, 0.6);
+            padding: 8px 20px;
             border-radius: 50px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        #timer { font-weight: 600; color: #444; font-size: 15px; }
+        #timer { font-weight: 600; color: #444; font-size: 14px; }
 
-        /* --- SOBRE (ESTRUCTURA MEJORADA) --- */
+        /* --- SOBRE --- */
         .envelope-wrapper {
             position: relative;
             width: 280px;
@@ -46,17 +49,17 @@
             background: var(--color-sobre);
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             cursor: pointer;
-            z-index: 50;
+            z-index: 100; /* El sobre siempre visible al centro */
+            transition: transform 0.3s ease;
         }
 
-        /* La tapa del sobre */
         .envelope-wrapper::before {
             content: "";
             position: absolute;
             top: 0;
-            z-index: 30; /* Encima de la carta cuando está cerrada */
+            z-index: 30;
             border-left: 140px solid transparent;
             border-right: 140px solid transparent;
             border-top: 110px solid var(--color-tapa);
@@ -64,7 +67,6 @@
             transition: transform 0.5s ease;
         }
 
-        /* El frente del sobre (lo que tapa la carta abajo) */
         .envelope-front {
             position: absolute;
             bottom: 0;
@@ -79,110 +81,156 @@
         /* LA CARTA */
         .letter {
             position: absolute;
-            bottom: 5px;
+            bottom: 10px;
             left: 10px;
             width: 260px;
             height: 180px;
             background: var(--color-carta);
-            z-index: 10; /* Empieza detrás de la tapa y el frente */
+            z-index: 10;
             padding: 20px;
             box-sizing: border-box;
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 5px;
             text-align: center;
-            overflow-y: auto; /* Por si escribes mucho texto */
             opacity: 0;
+            visibility: hidden;
         }
 
+        .letter-content { height: 100%; overflow-y: auto; padding-right: 5px; }
+        
+        /* FOTO DENTRO DE LA CARTA */
         .letter img {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
+            width: 110px;
+            height: 110px;
+            border-radius: 10px;
             object-fit: cover;
-            margin-bottom: 10px;
-            border: 3px solid var(--color-fondo);
+            margin-bottom: 15px;
+            border: 4px solid var(--color-fondo);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .letter h3 { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--color-tapa); margin: 0; }
-        .letter p { font-size: 14px; color: #555; line-height: 1.5; margin-top: 10px; }
+        .letter h3 { font-family: 'Dancing Script', cursive; font-size: 26px; color: var(--color-tapa); margin: 0; }
+        .letter p { font-size: 14px; color: #555; line-height: 1.6; margin-top: 10px; }
 
-        /* --- ESTADO ABIERTO --- */
-        .open::before {
-            transform: rotateX(180deg);
-            z-index: 0; /* La tapa se va atrás al abrir */
-        }
-
+        /* ESTADO ABIERTO */
+        .open::before { transform: rotateX(180deg); z-index: 0; }
         .open .letter {
-            transform: translateY(-180px) scale(1.2); /* Sube y se agranda */
-            z-index: 100; /* Se pone por delante de TODO */
-            height: 320px;
+            transform: translateY(-200px) scale(1.25);
+            z-index: 200; /* La carta abierta tapa todo */
+            height: 350px;
             opacity: 1;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            visibility: visible;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
-        /* FOTOS FLOTANTES */
+        /* --- FOTOS FLOTANTES GENERADAS --- */
+        #gallery-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* Para que no bloqueen clics al fondo si no es la foto */
+        }
+
         .photo {
             position: absolute;
-            width: 120px;
+            width: 110px; /* Un poco más pequeñas para que quepan 19 */
             background: white;
             padding: 5px 5px 15px 5px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            z-index: 5;
-            transition: transform 0.3s;
+            z-index: 5; /* Detrás del sobre */
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto; /* Reactivar clics en las fotos */
+            will-change: transform; /* Optimización para el navegador */
         }
-        .photo img { width: 100%; height: 100px; object-fit: cover; }
-        .photo p { font-family: 'Dancing Script', cursive; font-size: 14px; text-align: center; margin: 5px 0 0; }
+        .photo img { width: 100%; height: 90px; object-fit: cover; border-radius: 2px; }
         
-        .p1 { top: 10%; left: 5%; transform: rotate(-10deg); }
-        .p2 { bottom: 10%; left: 5%; transform: rotate(10deg); }
-        .p3 { top: 10%; right: 5%; transform: rotate(10deg); }
-        .p4 { bottom: 10%; right: 5%; transform: rotate(-10deg); }
-
-        /* CONFETI */
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #f00;
-            z-index: 150;
+        /* Agrandado extra al poner el mouse */
+        .photo:hover {
+            z-index: 300 !important; /* Por encima de TODO al hacer hover */
+            transform: scale(2.2) rotate(0deg) !important; /* Zoom muy grande */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
 
-        @media (max-width: 600px) {
-            .open .letter { transform: translateY(-160px) scale(1.1); width: 280px; left: 0; }
-            .photo { width: 90px; }
+        /* Animación de flotación */
+        @keyframes floating {
+            0% { transform: translateY(0px) rotate(var(--r)); }
+            50% { transform: translateY(-15px) rotate(calc(var(--r) + 2deg)); }
+            100% { transform: translateY(0px) rotate(var(--r)); }
         }
+
+        /* --- RESPONSIVIDAD MÓVIL --- */
+        @media (max-width: 768px) {
+            .open .letter { transform: translateY(-150px) scale(1.1); width: 280px; left: 0; z-index: 400;}
+            .photo { width: 80px; padding: 4px 4px 12px 4px; }
+            .photo img { height: 70px; }
+            .photo:hover { transform: scale(2.0) rotate(0deg) !important; z-index: 400 !important;}
+            #timer { font-size: 12px; }
+        }
+
+        .confetti { position: absolute; width: 8px; height: 8px; z-index: 150; border-radius: 50%; }
     </style>
 </head>
 <body>
 
+    <audio id="musica" loop>
+        <source src="audio/cancion_especial.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="timer-container">
-        <div id="timer">Calculando tiempo...</div>
+        <div id="timer">Cargando...</div>
     </div>
 
-    <div class="photo p1"><img src="img/foto1.jpg"><p>Recuerdos</p></div>
-    <div class="photo p2"><img src="img/foto2.jpg"><p>Tus ojos</p></div>
-    <div class="photo p3"><img src="img/foto3.jpg"><p>Nosotros</p></div>
-    <div class="photo p4"><img src="img/foto4.jpg"><p>Te amo</p></div>
+    <div id="gallery-container"></div>
 
-    <div class="envelope-wrapper" id="envelope" onclick="abrirSobre()">
+    <div class="envelope-wrapper" id="envelope" onclick="manejarApertura()">
         <div class="envelope-front"></div>
         <div class="letter">
-            <img src="img/nosotros.jpg" alt="Nosotros">
-            <h3>¡Feliz primer mes!</h3>
-            <p>
-                <b>Mi niña hermosa,</b><br>
-                Parece increíble que ya haya pasado un mes desde ese 7 de enero. 
-                Eres la persona que ilumina mis días de estudio y me motiva a ser mejor cada día. 
-                Espero que este sea solo el primer "archivo" de una historia muy larga. ❤️
-            </p>
-            <p style="font-size: 11px; color: #888;">(Desliza para leer todo)</p>
+            <div class="letter-content">
+                <img src="img/foto_carta.jpg" alt="Nosotros">
+                <h3>¡Feliz primer mes!</h3>
+                <p>
+                    <b>Mi niña hermosa,</b><br><br>
+                    Parece increíble que ya haya pasado un mes desde aquel 7 de enero de 2026. <br><br>
+                    Quise juntar aquí 19 pequeños recuerdos de este comienzo. Gracias por cada uno de ellos. ❤️
+                </p>
+                <p style="font-size: 11px; color: #aaa; margin-top: 20px;">(Puedes deslizar para seguir leyendo)</p>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- FECHA DE ANIVERSARIO: 7 de Enero de 2026 ---
-        const startDate = new Date(2026, 0, 7, 0, 0); 
+        // --- CONFIGURACIÓN ---
+        const startDate = new Date(2026, 0, 7, 0, 0); // 7 Enero 2026
+        const TOTAL_FOTOS = 19; // ¡Aquí defines cuántas fotos tienes!
 
+        // --- FUNCIÓN PARA GENERAR LA GALERÍA AUTOMÁTICA (El cerebro ingenieril) ---
+        function generarGaleriaFotos() {
+            const container = document.getElementById('gallery-container');
+            
+            for (let i = 1; i <= TOTAL_FOTOS; i++) {
+                const photoDiv = document.createElement('div');
+                photoDiv.classList.add('photo');
+                
+                // Posición aleatoria (evitando un poco el centro exacto)
+                const top = Math.random() * 85; // Entre 0% y 85% de altura
+                const left = Math.random() * 90; // Entre 0% y 90% de ancho
+                const rotation = (Math.random() * 30) - 15; // Rotación entre -15 y 15 grados
+                const delay = Math.random() * 5; // Retraso aleatorio en la animación
+
+                // Aplicar estilos dinámicos
+                photoDiv.style.top = top + '%';
+                photoDiv.style.left = left + '%';
+                photoDiv.style.setProperty('--r', rotation + 'deg'); // Variable para la animación CSS
+                photoDiv.style.animation = `floating ${6 + Math.random()*4}s infinite ease-in-out ${delay}s`;
+                
+                // El HTML interno de cada foto (sin texto para que no se sature)
+                // Asegúrate de que tus fotos se llamen foto1.jpg, foto2.jpg... hasta foto19.jpg
+                photoDiv.innerHTML = `<img src="img/foto${i}.jpg" alt="Recuerdo ${i}">`;
+                
+                container.appendChild(photoDiv);
+            }
+        }
+
+        // --- RESTO DE FUNCIONES (Contador, Música, Sobre) ---
         function updateTimer() {
             const now = new Date();
             const diff = now - startDate;
@@ -190,48 +238,42 @@
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const secs = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById('timer').innerHTML = `Llevamos juntos: ${days}d ${hours}h ${mins}m ${secs}s`;
+            document.getElementById('timer').innerHTML = `${days}d ${hours}h ${mins}m ${secs}s juntos`;
         }
-        setInterval(updateTimer, 1000);
 
-        function abrirSobre() {
+        function manejarApertura() {
             const env = document.getElementById('envelope');
+            const audio = document.getElementById('musica');
             if(!env.classList.contains('open')) {
                 env.classList.add('open');
                 lanzarConfeti();
+                audio.play().catch(e => console.log("Esperando interacción para música"));
             } else {
                 env.classList.remove('open');
+                audio.pause();
             }
         }
 
-        function lanzarConfeti() {
-            for(let i=0; i<50; i++) {
-                const c = document.createElement('div');
-                c.className = 'confetti';
-                c.style.left = '50%';
-                c.style.top = '50%';
+        function lanzarConfeti() { /* (Mismo código de confeti anterior...) */
+            for(let i=0; i<60; i++) {
+                const c = document.createElement('div'); c.className = 'confetti';
+                c.style.left = '50%'; c.style.top = '40%';
                 c.style.backgroundColor = ['#ff5252', '#ff8a80', '#ffd740', '#ffffff'][Math.floor(Math.random()*4)];
                 document.body.appendChild(c);
-                
-                const angle = Math.random() * Math.PI * 2;
-                const velocity = Math.random() * 10 + 5;
-                let x = 0, y = 0;
-                let gravity = 0.5;
-                let vx = Math.cos(angle) * velocity;
-                let vy = Math.sin(angle) * velocity - 10;
-
-                const move = setInterval(() => {
-                    x += vx;
-                    y += vy;
-                    vy += gravity;
-                    c.style.transform = `translate(${x}px, ${y}px) rotate(${x}deg)`;
-                    if(y > window.innerHeight) {
-                        clearInterval(move);
-                        c.remove();
-                    }
-                }, 20);
+                const angle = Math.random()*Math.PI*2; const velocity = Math.random()*12+6;
+                let x=0, y=0, gravity=0.4; let vx=Math.cos(angle)*velocity; let vy=Math.sin(angle)*velocity-8;
+                const anim = setInterval(()=>{ x+=vx; y+=vy; vy+=gravity; c.style.transform=`translate(${x}px, ${y}px)`;
+                    if(y>window.innerHeight){clearInterval(anim);c.remove();}},20);
             }
         }
+
+        // --- INICIALIZACIÓN ---
+        // Ejecutar al cargar la página
+        window.onload = function() {
+            generarGaleriaFotos(); // ¡Genera las 19 fotos!
+            setInterval(updateTimer, 1000);
+            updateTimer(); // Primera llamada inmediata
+        };
     </script>
 </body>
 </html>
