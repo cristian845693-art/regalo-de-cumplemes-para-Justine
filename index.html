@@ -18,17 +18,18 @@
             background-color: var(--color-fondo);
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
+            /* Habilitamos scroll vertical pero no horizontal */
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* --- CONTADOR --- */
+        /* --- CONTADOR FIJO --- */
         #timer-container {
-            position: absolute;
+            position: fixed; /* Siempre visible arriba */
             top: 15px;
             text-align: center;
             z-index: 5000;
@@ -40,17 +41,18 @@
         }
         #timer { font-weight: 600; color: #444; font-size: 13px; }
 
-        /* --- GALERÍA --- */
+        /* --- CONTENEDOR DE GALERÍA --- */
         #gallery-container {
             position: absolute;
             top: 0; left: 0;
-            width: 100%; height: 100%;
+            width: 100%;
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             grid-template-rows: repeat(5, 1fr);
             padding: 25px;
             box-sizing: border-box;
             pointer-events: none;
+            height: 100vh;
         }
 
         .photo-slot {
@@ -79,7 +81,6 @@
             image-rendering: high-quality;
         }
 
-        /* ZOOM POTENTE REPARADO */
         .photo:hover {
             animation: none !important;
             z-index: 6000 !important;
@@ -87,18 +88,17 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
 
-        /* --- SOBRE (CENTRO) --- */
+        /* --- SOBRE FIJO EN EL CENTRO --- */
         .envelope-wrapper {
-            position: relative;
+            position: fixed; /* No se mueve al hacer scroll */
             width: 260px;
             height: 180px;
             background: var(--color-sobre);
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             z-index: 1000;
             cursor: pointer;
-            margin-top: 30px;
         }
 
         .envelope-wrapper::before {
@@ -139,10 +139,6 @@
             text-align: center;
         }
 
-        /* Scrollbar estética */
-        .letter-content::-webkit-scrollbar { width: 4px; }
-        .letter-content::-webkit-scrollbar-thumb { background: var(--color-tapa); border-radius: 10px; }
-
         .open::before { transform: rotateX(180deg); }
         .open .letter {
             transform: translateY(-130px) scale(1.3);
@@ -157,19 +153,21 @@
         .letter h3 { font-family: 'Dancing Script', cursive; font-size: 22px; color: var(--color-tapa); margin: 0; }
         .letter p { font-size: 13px; color: #555; line-height: 1.4; }
 
-        /* --- AJUSTES MÓVIL OPTIMIZADOS --- */
+        /* --- MÓVIL OPTIMIZADO CON SCROLL --- */
         @media (max-width: 768px) {
             #gallery-container { 
-                grid-template-columns: repeat(3, 1fr); 
-                grid-template-rows: repeat(10, 1fr); /* Más filas para estirar verticalmente */
-                padding: 70px 10px 40px 10px; 
-                gap: 12px; 
+                grid-template-columns: repeat(2, 1fr); /* 2 columnas para que las fotos sean más grandes */
+                grid-template-rows: repeat(12, 1fr); 
+                height: 220vh; /* Altura extendida para permitir el scroll */
+                padding: 100px 20px 100px 20px; 
+                gap: 25px; 
             }
-            .photo { width: 85px; }
-            .photo img { height: 75px; }
-            .photo:hover { transform: scale(2.6) !important; } 
-            .envelope-wrapper { margin-top: 100px; transform: scale(0.8); }
-            .open .letter { transform: translateY(-110px) scale(1.1); width: 280px; left: -10px; }
+            .photo { width: 130px; } /* Fotos grandes en celu */
+            .photo img { height: 110px; }
+            .photo:hover { transform: scale(1.8) !important; } /* Zoom moderado para no tapar todo el scroll */
+            
+            .envelope-wrapper { transform: scale(0.8); }
+            .open .letter { transform: translateY(-100px) scale(1.1); width: 280px; left: -10px; }
         }
 
         @keyframes floating {
@@ -178,7 +176,7 @@
             100% { transform: translateY(0px) rotate(var(--r)); }
         }
 
-        .confetti { position: absolute; width: 6px; height: 6px; z-index: 7000; border-radius: 50%; pointer-events: none; }
+        .confetti { position: fixed; width: 6px; height: 6px; z-index: 7000; border-radius: 50%; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -188,7 +186,7 @@
     </audio>
 
     <div id="timer-container">
-        <div id="timer">Cargando nuestro tiempo...</div>
+        <div id="timer">Llevamos: ...</div>
     </div>
 
     <div id="gallery-container"></div>
@@ -204,6 +202,7 @@
                     Parece increíble que ya haya pasado un mes desde aquel 7 de enero de 2026. <br><br>
                     Cada una de estas 19 fotos es un pedacito de lo feliz que me haces. Gracias por estar conmigo y por cada momento compartido. ❤️
                 </p>
+                <p style="font-size: 11px; color: #aaa; margin-top: 15px;">(Desliza para leer más)</p>
             </div>
         </div>
     </div>
@@ -216,15 +215,12 @@
             const container = document.getElementById('gallery-container');
             const isMobile = window.innerWidth <= 768;
             
-            // Slots excluidos en Móvil (Grilla 3x10 = 30 slots)
-            // Dejamos libre el centro (Fila 4 a 7 de la columna central) para el sobre/carta
-            const excludedMobile = [10, 13, 16, 19]; 
-            
-            // Slots excluidos en PC (Grilla 7x5 = 35 slots)
+            // En móvil dejamos libre el "espacio visual" del centro
+            const excludedMobile = [8, 9, 10, 11, 12, 13]; 
             const excludedPC = [9,10,11, 16,17,18, 23,24,25];
 
             const excluded = isMobile ? excludedMobile : excludedPC;
-            const totalCells = isMobile ? 30 : 35;
+            const totalCells = isMobile ? 24 : 35;
 
             let photoIndex = 1;
             for (let i = 0; i < totalCells; i++) {
@@ -234,7 +230,7 @@
                 if (!excluded.includes(i) && photoIndex <= TOTAL_FOTOS) {
                     const photo = document.createElement('div');
                     photo.className = 'photo';
-                    const r = (Math.random() * 12) - 6;
+                    const r = (Math.random() * 10) - 5;
                     photo.style.setProperty('--r', r + 'deg');
                     photo.style.animationDelay = (Math.random() * 5) + 's';
                     photo.innerHTML = `<img src="img/foto${photoIndex}.jpeg" alt="Foto ${photoIndex}">`;
@@ -272,11 +268,11 @@
             for(let i=0; i<60; i++) {
                 const c = document.createElement('div');
                 c.className = 'confetti';
-                c.style.left = '50%'; c.style.top = '40%';
+                c.style.left = '50%'; c.style.top = '50%';
                 c.style.backgroundColor = ['#ff5252','#ff8a80','#ffd740','#ffffff'][Math.floor(Math.random()*4)];
                 document.body.appendChild(c);
-                const a = Math.random()*Math.PI*2; const v = Math.random()*12+5;
-                let x=0, y=0, g=0.4; let vx=Math.cos(a)*v; let vy=Math.sin(a)*v-8;
+                const a = Math.random()*Math.PI*2; const v = Math.random()*15+5;
+                let x=0, y=0, g=0.5; let vx=Math.cos(a)*v; let vy=Math.sin(a)*v-10;
                 const interval = setInterval(() => {
                     x+=vx; y+=vy; vy+=g;
                     c.style.transform = `translate(${x}px, ${y}px) rotate(${x}deg)`;
