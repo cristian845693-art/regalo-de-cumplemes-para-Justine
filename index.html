@@ -29,7 +29,7 @@
         /* --- CONTADOR --- */
         #timer-container {
             position: absolute;
-            top: 20px;
+            top: 15px;
             text-align: center;
             z-index: 5000;
             background: rgba(255, 255, 255, 0.9);
@@ -38,7 +38,7 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        #timer { font-weight: 600; color: #444; font-size: 14px; }
+        #timer { font-weight: 600; color: #444; font-size: 13px; }
 
         /* --- GALERÍA --- */
         #gallery-container {
@@ -48,7 +48,7 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             grid-template-rows: repeat(5, 1fr);
-            padding: 30px;
+            padding: 25px;
             box-sizing: border-box;
             pointer-events: none;
         }
@@ -76,13 +76,14 @@
             width: 100%; height: 95px;
             object-fit: cover;
             border-radius: 2px;
+            image-rendering: high-quality;
         }
 
-        /* ZOOM MASIVO */
+        /* ZOOM POTENTE REPARADO */
         .photo:hover {
             animation: none !important;
             z-index: 6000 !important;
-            transform: scale(2.8) rotate(0deg) !important; 
+            transform: scale(3.8) rotate(0deg) !important; 
             box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
 
@@ -97,7 +98,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             z-index: 1000;
             cursor: pointer;
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
         .envelope-wrapper::before {
@@ -117,12 +118,10 @@
             border-bottom: 100px solid var(--color-sobre);
         }
 
-        /* --- CARTA --- */
         .letter {
             position: absolute;
             bottom: 10px; left: 10px;
-            width: 240px; 
-            height: 160px;
+            width: 240px; height: 160px;
             background: white;
             z-index: 20;
             padding: 15px;
@@ -131,18 +130,18 @@
             border-radius: 5px;
             opacity: 0;
             visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         .letter-content {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             overflow-y: auto;
             padding-right: 5px;
             text-align: center;
         }
+
+        /* Scrollbar estética */
+        .letter-content::-webkit-scrollbar { width: 4px; }
+        .letter-content::-webkit-scrollbar-thumb { background: var(--color-tapa); border-radius: 10px; }
 
         .open::before { transform: rotateX(180deg); }
         .open .letter {
@@ -154,23 +153,23 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
-        .letter img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid var(--color-fondo); }
+        .letter img { width: 85px; height: 85px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid var(--color-fondo); }
         .letter h3 { font-family: 'Dancing Script', cursive; font-size: 22px; color: var(--color-tapa); margin: 0; }
         .letter p { font-size: 13px; color: #555; line-height: 1.4; }
 
-        /* --- AJUSTES MÓVIL PROLIJOS --- */
+        /* --- AJUSTES MÓVIL OPTIMIZADOS --- */
         @media (max-width: 768px) {
             #gallery-container { 
-                grid-template-columns: repeat(3, 1fr); /* 3 columnas: Izquierda, Centro (vacío), Derecha */
-                grid-template-rows: repeat(8, 1fr); 
-                padding: 60px 10px; 
-                gap: 10px; 
+                grid-template-columns: repeat(3, 1fr); 
+                grid-template-rows: repeat(10, 1fr); /* Más filas para estirar verticalmente */
+                padding: 70px 10px 40px 10px; 
+                gap: 12px; 
             }
             .photo { width: 85px; }
             .photo img { height: 75px; }
-            .photo:hover { transform: scale(2.8) !important; } /* Zoom controlado para que no se salga */
-            .envelope-wrapper { margin-top: 120px; transform: scale(0.8); }
-            .open .letter { transform: translateY(-100px) scale(1.1); width: 280px; left: -10px; }
+            .photo:hover { transform: scale(2.6) !important; } 
+            .envelope-wrapper { margin-top: 100px; transform: scale(0.8); }
+            .open .letter { transform: translateY(-110px) scale(1.1); width: 280px; left: -10px; }
         }
 
         @keyframes floating {
@@ -189,7 +188,7 @@
     </audio>
 
     <div id="timer-container">
-        <div id="timer">Llevamos: ...</div>
+        <div id="timer">Cargando nuestro tiempo...</div>
     </div>
 
     <div id="gallery-container"></div>
@@ -203,8 +202,7 @@
                 <p>
                     <b>Mi niña hermosa,</b><br><br>
                     Parece increíble que ya haya pasado un mes desde aquel 7 de enero de 2026. <br><br>
-                    Cada una de estas 19 fotos es un pedacito de lo feliz que me haces. Gracias por estar conmigo y por cada momento compartido. <br><br>
-                    Eres lo más bonito que me ha pasado y espero seguir sumando fotos a esta galería por mucho tiempo más. ❤️
+                    Cada una de estas 19 fotos es un pedacito de lo feliz que me haces. Gracias por estar conmigo y por cada momento compartido. ❤️
                 </p>
             </div>
         </div>
@@ -218,15 +216,15 @@
             const container = document.getElementById('gallery-container');
             const isMobile = window.innerWidth <= 768;
             
-            // Lógica de exclusión para Móvil (3 columnas)
-            // Bloqueamos la columna central (índices 1, 4, 7, 10, 13...) para el sobre y la carta
-            const excludedMobile = [1, 4, 7, 10, 13, 16]; 
+            // Slots excluidos en Móvil (Grilla 3x10 = 30 slots)
+            // Dejamos libre el centro (Fila 4 a 7 de la columna central) para el sobre/carta
+            const excludedMobile = [10, 13, 16, 19]; 
             
-            // Lógica de exclusión para PC (7 columnas)
+            // Slots excluidos en PC (Grilla 7x5 = 35 slots)
             const excludedPC = [9,10,11, 16,17,18, 23,24,25];
 
             const excluded = isMobile ? excludedMobile : excludedPC;
-            const totalCells = isMobile ? 24 : 35;
+            const totalCells = isMobile ? 30 : 35;
 
             let photoIndex = 1;
             for (let i = 0; i < totalCells; i++) {
