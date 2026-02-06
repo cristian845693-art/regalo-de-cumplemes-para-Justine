@@ -33,16 +33,15 @@
             top: 20px;
             text-align: center;
             z-index: 150;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.75);
             padding: 8px 25px;
             border-radius: 50px;
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.3);
         }
-        #timer { font-weight: 600; color: #444; font-size: 14px; letter-spacing: 0.5px; }
+        #timer { font-weight: 600; color: #444; font-size: 14px; }
 
-        /* --- SOBRE (ENGINEERING DESIGN) --- */
+        /* --- SOBRE --- */
         .envelope-wrapper {
             position: relative;
             width: 280px;
@@ -54,6 +53,7 @@
             cursor: pointer;
             z-index: 100;
             transition: transform 0.3s ease;
+            margin-top: 50px; /* Bajamos un poco el sobre para dar espacio arriba */
         }
 
         .envelope-wrapper::before {
@@ -79,7 +79,7 @@
             z-index: 30;
         }
 
-        /* LA CARTA */
+        /* LA CARTA (Ajustada para abrirse más abajo) */
         .letter {
             position: absolute;
             bottom: 10px;
@@ -97,21 +97,27 @@
             visibility: hidden;
         }
 
-        .letter-content { height: 100%; overflow-y: auto; padding-right: 5px; }
+        .letter-content { height: 100%; overflow-y: auto; }
+        
         .letter img {
-            width: 120px; height: 120px;
-            border-radius: 10px;
+            width: 130px; 
+            height: 130px;
+            border-radius: 8px;
             object-fit: cover;
             margin-bottom: 15px;
             border: 4px solid var(--color-fondo);
+            /* Mejora de calidad de imagen */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: high-quality;
         }
+
         .letter h3 { font-family: 'Dancing Script', cursive; font-size: 26px; color: var(--color-tapa); margin: 0; }
         .letter p { font-size: 14px; color: #555; line-height: 1.6; margin-top: 10px; }
 
-        /* ESTADO ABIERTO */
+        /* ESTADO ABIERTO (Ajuste: translateY reducido para que quede más abajo) */
         .open::before { transform: rotateX(180deg); z-index: 10; }
         .open .letter {
-            transform: translateY(-220px) scale(1.3);
+            transform: translateY(-160px) scale(1.3); /* Bajamos de -220px a -160px */
             z-index: 200;
             height: 380px;
             opacity: 1;
@@ -128,9 +134,9 @@
 
         .photo {
             position: absolute;
-            width: 130px;
+            width: 140px; 
             background: white;
-            padding: 6px 6px 20px 6px;
+            padding: 7px 7px 22px 7px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.12);
             z-index: 5;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -138,14 +144,20 @@
             will-change: transform;
         }
 
-        .photo img { width: 100%; height: 110px; object-fit: cover; border-radius: 2px; }
+        .photo img { 
+            width: 100%; 
+            height: 120px; 
+            object-fit: cover; 
+            border-radius: 2px;
+            /* Mejora de calidad de imagen */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: high-quality;
+        }
 
-        /* ZOOM POTENTE */
         .photo:hover {
             z-index: 500 !important;
-            transform: scale(3.5) rotate(0deg) !important;
+            transform: scale(3.2) rotate(0deg) !important;
             box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-            cursor: pointer;
         }
 
         @keyframes floating {
@@ -155,10 +167,10 @@
         }
 
         @media (max-width: 768px) {
-            .open .letter { transform: translateY(-160px) scale(1.15); width: 280px; left: 0; }
-            .photo { width: 85px; }
-            .photo img { height: 75px; }
-            .photo:hover { transform: scale(2.8) rotate(0deg) !important; }
+            .open .letter { transform: translateY(-130px) scale(1.15); width: 280px; left: 0; }
+            .photo { width: 90px; }
+            .photo img { height: 80px; }
+            .envelope-wrapper { margin-top: 80px; }
         }
 
         .confetti { position: absolute; width: 8px; height: 8px; z-index: 150; border-radius: 50%; }
@@ -193,51 +205,38 @@
     </div>
 
     <script>
-        // --- CONFIGURACIÓN DE DATOS ---
         const startDate = new Date(2026, 0, 7, 0, 0); 
         const TOTAL_FOTOS = 19; 
 
-        // --- DISTRIBUCIÓN INTELIGENTE DE FOTOS ---
         function generarGaleria() {
             const container = document.getElementById('gallery-container');
-            const cols = 5; 
-            const rows = 4; 
-            const cellW = 100 / cols;
-            const cellH = 100 / rows;
+            const cols = 5; const rows = 4;
+            const cellW = 100 / cols; const cellH = 100 / rows;
 
             for (let i = 0; i < TOTAL_FOTOS; i++) {
                 const photo = document.createElement('div');
                 photo.className = 'photo';
-                
-                const col = i % cols;
-                const row = Math.floor(i / cols);
-
-                // Jitter (desorden controlado)
+                const col = i % cols; const row = Math.floor(i / cols);
                 const jitterX = (Math.random() - 0.5) * 12;
                 const jitterY = (Math.random() - 0.5) * 12;
-
                 let x = (col * cellW) + (cellW / 2) + jitterX;
                 let y = (row * cellH) + (cellH / 2) + jitterY;
 
-                // Zona de exclusión para el sobre (centro)
                 if (x > 30 && x < 70 && y > 30 && y < 70) {
-                    x += x < 50 ? -25 : 25;
-                    y += y < 50 ? -25 : 25;
+                    x += x < 50 ? -25 : 25; y += y < 50 ? -25 : 25;
                 }
 
-                photo.style.left = `calc(${x}% - 65px)`;
-                photo.style.top = `calc(${y}% - 65px)`;
+                photo.style.left = `calc(${x}% - 70px)`;
+                photo.style.top = `calc(${y}% - 70px)`;
                 const r = (Math.random() * 24) - 12;
                 photo.style.setProperty('--r', r + 'deg');
                 photo.style.animation = `floating ${6 + Math.random()*4}s infinite ease-in-out ${Math.random()*5}s`;
                 
-                // Formato .jpeg como pediste
                 photo.innerHTML = `<img src="img/foto${i+1}.jpeg" alt="Recuerdo">`;
                 container.appendChild(photo);
             }
         }
 
-        // --- LÓGICA DEL CONTADOR ---
         function updateTimer() {
             const now = new Date();
             const diff = now - startDate;
@@ -248,21 +247,19 @@
             document.getElementById('timer').innerHTML = `Llevamos: ${d}d ${h}h ${m}m ${s}s`;
         }
 
-        // --- INTERACCIÓN DEL SOBRE ---
         function manejarApertura() {
             const env = document.getElementById('envelope');
             const audio = document.getElementById('musica');
             if(!env.classList.contains('open')) {
                 env.classList.add('open');
                 lanzarConfeti();
-                audio.play().catch(() => console.log("Clic requerido para audio"));
+                audio.play().catch(() => {});
             } else {
                 env.classList.remove('open');
                 audio.pause();
             }
         }
 
-        // --- EFECTO FÍSICO DE CONFETI ---
         function lanzarConfeti() {
             for(let i=0; i<70; i++) {
                 const c = document.createElement('div');
@@ -285,9 +282,6 @@
             setInterval(updateTimer, 1000);
             updateTimer();
         };
-    </script>
-</body>
-</html>
     </script>
 </body>
 </html>
