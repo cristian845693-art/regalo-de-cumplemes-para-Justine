@@ -26,13 +26,21 @@
             justify-content: center;
         }
 
-        /* --- ESTILO PARA EL NOMBRE --- */
+        /* --- ESTILO PARA EL NOMBRE Y TÍTULO --- */
         .name-style {
             font-family: 'Dancing Script', cursive;
             font-size: 1.3em;
             color: var(--color-tapa);
             font-weight: bold;
             vertical-align: middle;
+        }
+
+        .title-style {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            color: #444;
+            margin-bottom: 15px;
+            display: block;
         }
 
         /* --- CORAZONES FLOTANTES --- */
@@ -64,6 +72,42 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         #timer { font-weight: 600; color: #444; font-size: 13px; }
+
+        /* --- CONTROLES DE MÚSICA --- */
+        #music-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 6000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-btn {
+            background: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #song-title {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: var(--color-tapa);
+            font-weight: bold;
+            display: none;
+        }
 
         /* --- GALERÍA --- */
         #gallery-container {
@@ -98,7 +142,7 @@
         .photo:hover {
             animation: none !important;
             z-index: 6000 !important;
-            transform: scale(2.8) rotate(0deg) translate3d(0,0,0) !important; 
+            transform: scale(3.5) rotate(0deg) translate3d(0,0,0) !important; 
             box-shadow: 0 25px 50px rgba(0,0,0,0.4);
         }
 
@@ -132,7 +176,6 @@
             border-bottom: 100px solid var(--color-sobre);
         }
 
-        /* --- CARTA --- */
         .letter {
             position: absolute;
             bottom: 10px; left: 10px;
@@ -153,7 +196,6 @@
             padding-right: 5px;
         }
 
-        /* Scrollbar estética */
         .letter-content::-webkit-scrollbar { width: 4px; }
         .letter-content::-webkit-scrollbar-thumb { background: var(--color-tapa); border-radius: 10px; }
 
@@ -184,14 +226,9 @@
             margin: 0 0 10px 0; 
         }
 
-        /* TEXTO JUSTIFICADO */
         .letter p { 
-            font-size: 13px; 
-            color: #555; 
-            line-height: 1.5; 
-            text-align: justify; /* JUSTIFICACIÓN */
-            hyphens: auto;
-            margin: 0;
+            font-size: 13px; color: #555; line-height: 1.5; 
+            text-align: justify; hyphens: auto; margin: 0;
         }
 
         @media (max-width: 768px) {
@@ -220,12 +257,16 @@
 </head>
 <body>
 
-    <audio id="musica" loop>
-        <source src="audio/cancion_especial.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="musica-player"></audio>
+
+    <div id="music-controls">
+        <span id="song-title"></span>
+        <button class="music-btn" id="btn-next" onclick="nextSong()">⏭️</button>
+        <button class="music-btn" id="btn-play" onclick="toggleMusic()">🎵</button>
+    </div>
 
     <div id="timer-container">
-        <div id="timer">Llevamos: ...</div>
+        <div id="timer">Cargando nuestro tiempo...</div>
     </div>
 
     <div id="gallery-container"></div>
@@ -234,6 +275,8 @@
         <div class="envelope-front"></div>
         <div class="letter">
             <div class="letter-content">
+                <span class="title-style">Para <span class="name-style">Justine</span> ❤️</span>
+                
                 <img src="img/nosotros.jpeg" alt="Nosotros">
                 <h3>¡Feliz primer mes!</h3>
                 <p>
@@ -245,19 +288,18 @@
 
                     <span class="name-style">Justine</span>, parece increíble que ya haya pasado un mes desde que comenzamos esta linda aventura; desde que te conocí, ¡el tiempo a tu lado pasa volando! <br><br>
                     
-                    Cada día ha sido especial. He podido conocer tu lado tierno y vulnerable, tus delirios y la cotidianidad de tu vida compartiendo con tu familia. Sin duda, cada día me enamoro más de ti y de tu forma de ser con la gente que te rodea.<br><br>
+                    Cada día ha sido especial. He podido conocer tu lado tierno y vulnerable, tus delirios y la cotidianidad compartiendo con tu familia. Sin duda, cada día me enamoro más de ti y de tu forma de ser con la gente que te rodea.<br><br>
 
                     Eres una persona hermosa que siempre se preocupa por los demás; eres atenta, cariñosa y contagias alegría con tu sonrisa (y tus delirios, JAJAJA). Valoro muchísimo que estés presente en mi vida.<br><br>
 
-                    Como tú sabes, genuinamente me gusta sacar fotos y guardar nuestros momentos, porque siempre que los veo puedo recordar lo feliz que me haces a diario, y ojalá estas fotos también te recuerden lo mismo a ti.<br><br>
+                    Como tú sabes, genuinamente me gusta sacar fotos y guardar todos nuestros momentos. Siempre las veo para recordar lo feliz que me haces a diario, y ojalá estas fotos también te recuerden lo mismo a ti.<br><br>
 
                     Gracias por estar conmigo y por cada momento compartido. <br><br>
                     <span style="display: block; text-align: center;">
-                        <b>Te amo mucho <br>
-                            <span class="name-style">Justine</span> ❤️!!</b>
+                        <b>Te amo, <span class="name-style">Justine</span> ❤️</b>
                     </span>
                 </p>
-                <p style="font-size: 11px; color: #aaa; margin-top: 15px; text-align: center;">(Con mucho amor, de Cristian.)</p>
+                <p style="font-size: 11px; color: #aaa; margin-top: 15px; text-align: center;">(Desliza para leer más)</p>
             </div>
         </div>
     </div>
@@ -265,6 +307,42 @@
     <script>
         const startDate = new Date(2026, 0, 7, 0, 0); 
         const TOTAL_FOTOS = 19; 
+
+        const playlist = [
+            { title: "Nuestra Canción 1", src: "audio/cancion1.mp3" },
+            { title: "Nuestra Canción 2", src: "audio/cancion2.mp3" },
+            { title: "Nuestra Canción 3", src: "audio/cancion3.mp3" }
+        ];
+        let currentSongIndex = 0;
+        const player = document.getElementById('musica-player');
+        const btnPlay = document.getElementById('btn-play');
+        const songTitleDisplay = document.getElementById('song-title');
+
+        function loadSong(index) {
+            player.src = playlist[index].src;
+            songTitleDisplay.innerText = playlist[index].title;
+        }
+
+        function toggleMusic() {
+            if (player.paused) {
+                player.play();
+                btnPlay.innerText = "⏸️";
+                songTitleDisplay.style.display = "block";
+            } else {
+                player.pause();
+                btnPlay.innerText = "▶️";
+            }
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            loadSong(currentSongIndex);
+            player.play();
+            btnPlay.innerText = "⏸️";
+            songTitleDisplay.style.display = "block";
+        }
+
+        player.addEventListener('ended', nextSong);
 
         function generarGaleria() {
             const container = document.getElementById('gallery-container');
@@ -315,14 +393,14 @@
 
         function manejarApertura() {
             const env = document.getElementById('envelope');
-            const audio = document.getElementById('musica');
             if(!env.classList.contains('open')) {
                 env.classList.add('open');
                 lanzarConfeti();
-                audio.play().catch(() => {});
+                if (player.paused) toggleMusic();
             } else {
                 env.classList.remove('open');
-                audio.pause();
+                player.pause();
+                btnPlay.innerText = "▶️";
             }
         }
 
@@ -345,6 +423,7 @@
 
         window.onload = () => {
             generarGaleria();
+            loadSong(0);
             setInterval(updateTimer, 1000);
             setInterval(createHeart, 400);
             updateTimer();
