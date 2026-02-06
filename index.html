@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Para mi niña favorita</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     
@@ -18,21 +18,23 @@
             background-color: var(--color-fondo);
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; /* Evita que las fotos que se salen de pantalla creen barras de scroll */
+            overflow: hidden; 
             height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            /* Evita el rebote en celulares al hacer scroll */
+            overscroll-behavior: none;
         }
 
-        /* --- ESTILO DEL CONTADOR --- */
+        /* --- CONTADOR --- */
         #timer-container {
             position: absolute;
             top: 20px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.6);
-            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
             border-radius: 50px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             backdrop-filter: blur(5px);
@@ -41,28 +43,29 @@
 
         #timer-container h2 {
             margin: 0;
-            font-size: 14px;
+            font-size: 12px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             color: var(--color-tapa);
         }
 
         #timer {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--color-texto);
         }
 
-        /* --- ESTILO DEL SOBRE --- */
+        /* --- SOBRE --- */
         .envelope-wrapper {
             position: relative;
             cursor: pointer;
-            z-index: 50;
-            transition: transform 0.5s;
+            z-index: 60; /* Más alto que las fotos */
+            transition: transform 0.3s ease;
         }
-
-        .envelope-wrapper:hover {
-            transform: scale(1.05);
+        
+        /* Efecto de pulsar en celular */
+        .envelope-wrapper:active {
+            transform: scale(0.95);
         }
 
         .envelope {
@@ -72,6 +75,7 @@
             background: var(--color-sobre);
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         .envelope:before {
@@ -83,7 +87,7 @@
             border-right: 125px solid transparent;
             border-top: 100px solid var(--color-tapa);
             transform-origin: top;
-            transition: transform 0.5s;
+            transition: transform 0.5s ease-in-out;
         }
 
         .letter {
@@ -95,132 +99,151 @@
             background: white;
             padding: 15px;
             box-sizing: border-box;
-            transition: transform 0.5s;
+            transition: transform 0.5s ease-in-out;
             text-align: center;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
         }
 
         .letter img {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             object-fit: cover;
+            border: 3px solid var(--color-fondo);
         }
 
         .open .envelope:before { transform: rotateX(180deg); z-index: 0; }
-        .open .letter { transform: translateY(-120px); z-index: 1; height: 260px; }
+        .open .letter { transform: translateY(-130px); z-index: 2; height: 280px; }
 
-        /* --- GALERÍA DE FOTOS FLOTANTES --- */
+        /* --- FOTOS FLOTANTES --- */
         .photo {
             position: absolute;
-            width: 150px;
+            width: 140px; /* Tamaño base */
             background: white;
-            padding: 8px 8px 25px 8px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            border-radius: 2px;
+            padding: 6px 6px 20px 6px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            border-radius: 3px;
             z-index: 10;
+            /* Transición suave para el zoom */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), z-index 0s;
         }
 
         .photo img {
             width: 100%;
-            height: 140px;
+            height: 130px;
             object-fit: cover;
         }
 
         .photo p {
-            margin: 10px 0 0;
+            margin: 8px 0 0;
             font-family: 'Dancing Script', cursive;
-            font-size: 16px;
+            font-size: 18px;
             text-align: center;
+            color: #444;
+        }
+
+        /* AUMENTO GRANDE AL PASAR EL MOUSE */
+        .photo:hover {
+            z-index: 200 !important;
+            /* AQUÍ ESTÁ EL CAMBIO: Escala 1.7 (mucho más grande) */
+            transform: scale(1.7) rotate(0deg) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            animation-play-state: paused; /* Detiene el flotado */
         }
 
         /* Animación de flotación */
         @keyframes floating {
             0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(3deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
             100% { transform: translateY(0px) rotate(0deg); }
         }
 
-        .p1 { top: 15%; left: 10%; animation: floating 6s infinite ease-in-out; }
-        .p2 { top: 55%; left: 5%; animation: floating 8s infinite ease-in-out; }
-        .p3 { top: 10%; right: 10%; animation: floating 7s infinite ease-in-out; }
-        .p4 { top: 60%; right: 8%; animation: floating 9s infinite ease-in-out; }
+        /* Posiciones para PC */
+        .p1 { top: 15%; left: 15%; animation: floating 7s infinite ease-in-out; }
+        .p2 { top: 60%; left: 10%; animation: floating 8s infinite ease-in-out; animation-delay: 1s;}
+        .p3 { top: 15%; right: 15%; animation: floating 6.5s infinite ease-in-out; animation-delay: 0.5s;}
+        .p4 { top: 60%; right: 10%; animation: floating 9s infinite ease-in-out; animation-delay: 1.5s;}
 
-        .photo:hover {
-            z-index: 200;
-            transform: scale(1.3) !important;
-            animation-play-state: paused;
+
+        /* --- MEDIA QUERY: AJUSTES PARA CELULAR --- */
+        @media (max-width: 768px) {
+            /* Ajustar el contador */
+            #timer-container { top: 10px; padding: 8px 15px; }
+            #timer { font-size: 14px; }
+            
+            /* Reducir un poco el sobre */
+            .envelope-wrapper { transform: scale(0.85); }
+            .open .letter { transform: translateY(-110px); height: 250px; }
+
+            /* Reubicar las fotos para que no tapen el sobre en pantalla vertical */
+            .photo { width: 110px; /* Más pequeñas de base */ }
+            .photo img { height: 100px; }
+            
+            /* Posiciones estratégicas en las esquinas */
+            .p1 { top: 12%; left: 5%; animation-duration: 8s; }
+            .p2 { top: auto; bottom: 15%; left: 5%; animation-duration: 9s;} /* Abajo izquierda */
+            .p3 { top: 12%; right: 5%; animation-duration: 7s;}
+            .p4 { top: auto; bottom: 15%; right: 5%; animation-duration: 10s;} /* Abajo derecha */
+            
+            /* En celular el "hover" es tocar. Hacemos el zoom un poco menor para que no se salga de pantalla */
+            .photo:hover, .photo:active {
+                transform: scale(1.4) rotate(0deg) !important; 
+            }
         }
 
-        /* Corazones flotantes del fondo */
-        .heart {
-            position: absolute;
-            color: #ff5252;
-            font-size: 20px;
-            z-index: 1;
-            animation: moveHeart 4s linear infinite;
-        }
-
-        @keyframes moveHeart {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-        }
+        /* Corazones */
+        .heart { position: absolute; color: #ff5252; font-size: 18px; z-index: 1; animation: moveHeart 5s linear infinite; }
+        @keyframes moveHeart { 0% { transform: translateY(100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
     </style>
 </head>
 <body>
 
     <div id="timer-container">
         <h2>Llevamos juntos:</h2>
-        <div id="timer">Cargando tiempo...</div>
+        <div id="timer">Calculando...</div>
     </div>
 
-    <div class="photo p1"><img src="img/foto1.jpg"><p>Nuestro inicio</p></div>
-    <div class="photo p2"><img src="img/foto2.jpg"><p>Tus sonrisas</p></div>
-    <div class="photo p3"><img src="img/foto3.jpg"><p>Momentos únicos</p></div>
-    <div class="photo p4"><img src="img/foto4.jpg"><p>Te amo ❤️</p></div>
+    <div class="photo p1" onclick=""><img src="img/foto1.jpg"><p>Inicio</p></div>
+    <div class="photo p2" onclick=""><img src="img/foto2.jpg"><p>Risas</p></div>
+    <div class="photo p3" onclick=""><img src="img/foto3.jpg"><p>Viajes</p></div>
+    <div class="photo p4" onclick=""><img src="img/foto4.jpg"><p>Amor</p></div>
 
     <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
         <div class="envelope"></div>
         <div class="letter">
             <img src="img/nosotros.jpg" alt="Nosotros">
-            <p style="font-family: 'Dancing Script', cursive; font-size: 22px; margin: 10px 0;">¡Feliz cumple mes!</p>
-            <p style="font-size: 13px; color: #555; line-height: 1.4;">
-                Cada segundo a tu lado <br> es mi regalo favorito. <br> Gracias por estar conmigo.
+            <p style="font-family: 'Dancing Script', cursive; font-size: 20px; margin: 8px 0;">¡Feliz cumple mes!</p>
+            <p style="font-size: 12px; color: #555; line-height: 1.3;">
+                Eres mi algoritmo favorito. <br> Gracias por cada momento.
             </p>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN DEL CONTADOR ---
-        // Pon aquí la fecha en que empezaron: AÑO, MES (0-11), DÍA, HORA, MINUTO
-        const startDate = new Date(2026, 0, 7, 0, 0); // Ejemplo: 1 de Enero de 2024
+        // --- FECHA DE ANIVERSARIO (AÑO, MES-1, DÍA) ---
+        const startDate = new Date(2024, 0, 1, 0, 0); // Enero es 0
 
         function updateTimer() {
             const now = new Date();
             const diff = now - startDate;
-
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-            document.getElementById('timer').innerHTML = 
-                `${days}d ${hours}h ${mins}m ${secs}s`;
+            document.getElementById('timer').innerHTML = `${days}d ${hours}h ${mins}m ${secs}s`;
         }
         setInterval(updateTimer, 1000);
 
-        // --- CORAZONES DE FONDO ---
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
             heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
             document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 4000);
+            setTimeout(() => heart.remove(), 5000);
         }
-        setInterval(createHeart, 300);
+        setInterval(createHeart, 400);
     </script>
 </body>
 </html>
