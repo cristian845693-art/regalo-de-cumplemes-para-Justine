@@ -11,21 +11,18 @@
             --color-fondo: #ffebee;
             --color-sobre: #ff8a80;
             --color-tapa: #ff5252;
-            --color-texto: #444;
+            --color-carta: #ffffff;
         }
 
         body {
             background-color: var(--color-fondo);
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden; 
+            overflow: hidden;
             height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Evita el rebote en celulares al hacer scroll */
-            overscroll-behavior: none;
         }
 
         /* --- CONTADOR --- */
@@ -33,196 +30,158 @@
             position: absolute;
             top: 20px;
             text-align: center;
-            background: rgba(255, 255, 255, 0.7);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.4);
             padding: 10px 20px;
             border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             backdrop-filter: blur(5px);
-            z-index: 100;
         }
+        #timer { font-weight: 600; color: #444; font-size: 15px; }
 
-        #timer-container h2 {
-            margin: 0;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--color-tapa);
-        }
-
-        #timer {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--color-texto);
-        }
-
-        /* --- SOBRE --- */
+        /* --- SOBRE (ESTRUCTURA MEJORADA) --- */
         .envelope-wrapper {
             position: relative;
-            cursor: pointer;
-            z-index: 60; /* Más alto que las fotos */
-            transition: transform 0.3s ease;
-        }
-        
-        /* Efecto de pulsar en celular */
-        .envelope-wrapper:active {
-            transform: scale(0.95);
-        }
-
-        .envelope {
-            position: relative;
-            width: 250px;
-            height: 180px;
+            width: 280px;
+            height: 200px;
             background: var(--color-sobre);
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            cursor: pointer;
+            z-index: 50;
         }
 
-        .envelope:before {
+        /* La tapa del sobre */
+        .envelope-wrapper::before {
             content: "";
             position: absolute;
             top: 0;
-            z-index: 2;
-            border-left: 125px solid transparent;
-            border-right: 125px solid transparent;
-            border-top: 100px solid var(--color-tapa);
+            z-index: 30; /* Encima de la carta cuando está cerrada */
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 110px solid var(--color-tapa);
             transform-origin: top;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.5s ease;
         }
 
+        /* El frente del sobre (lo que tapa la carta abajo) */
+        .envelope-front {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-bottom: 110px solid var(--color-sobre);
+            z-index: 20;
+        }
+
+        /* LA CARTA */
         .letter {
             position: absolute;
-            bottom: 10px;
-            left: 20px;
-            width: 210px;
-            height: 150px;
-            background: white;
-            padding: 15px;
+            bottom: 5px;
+            left: 10px;
+            width: 260px;
+            height: 180px;
+            background: var(--color-carta);
+            z-index: 10; /* Empieza detrás de la tapa y el frente */
+            padding: 20px;
             box-sizing: border-box;
-            transition: transform 0.5s ease-in-out;
-            text-align: center;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            text-align: center;
+            overflow-y: auto; /* Por si escribes mucho texto */
+            opacity: 0;
         }
 
         .letter img {
-            width: 70px;
-            height: 70px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             object-fit: cover;
+            margin-bottom: 10px;
             border: 3px solid var(--color-fondo);
         }
 
-        .open .envelope:before { transform: rotateX(180deg); z-index: 0; }
-        .open .letter { transform: translateY(-130px); z-index: 2; height: 280px; }
+        .letter h3 { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--color-tapa); margin: 0; }
+        .letter p { font-size: 14px; color: #555; line-height: 1.5; margin-top: 10px; }
 
-        /* --- FOTOS FLOTANTES --- */
+        /* --- ESTADO ABIERTO --- */
+        .open::before {
+            transform: rotateX(180deg);
+            z-index: 0; /* La tapa se va atrás al abrir */
+        }
+
+        .open .letter {
+            transform: translateY(-180px) scale(1.2); /* Sube y se agranda */
+            z-index: 100; /* Se pone por delante de TODO */
+            height: 320px;
+            opacity: 1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* FOTOS FLOTANTES */
         .photo {
             position: absolute;
-            width: 140px; /* Tamaño base */
+            width: 120px;
             background: white;
-            padding: 6px 6px 20px 6px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-            border-radius: 3px;
-            z-index: 10;
-            /* Transición suave para el zoom */
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), z-index 0s;
+            padding: 5px 5px 15px 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 5;
+            transition: transform 0.3s;
+        }
+        .photo img { width: 100%; height: 100px; object-fit: cover; }
+        .photo p { font-family: 'Dancing Script', cursive; font-size: 14px; text-align: center; margin: 5px 0 0; }
+        
+        .p1 { top: 10%; left: 5%; transform: rotate(-10deg); }
+        .p2 { bottom: 10%; left: 5%; transform: rotate(10deg); }
+        .p3 { top: 10%; right: 5%; transform: rotate(10deg); }
+        .p4 { bottom: 10%; right: 5%; transform: rotate(-10deg); }
+
+        /* CONFETI */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            z-index: 150;
         }
 
-        .photo img {
-            width: 100%;
-            height: 130px;
-            object-fit: cover;
+        @media (max-width: 600px) {
+            .open .letter { transform: translateY(-160px) scale(1.1); width: 280px; left: 0; }
+            .photo { width: 90px; }
         }
-
-        .photo p {
-            margin: 8px 0 0;
-            font-family: 'Dancing Script', cursive;
-            font-size: 18px;
-            text-align: center;
-            color: #444;
-        }
-
-        /* AUMENTO GRANDE AL PASAR EL MOUSE */
-        .photo:hover {
-            z-index: 200 !important;
-            /* AQUÍ ESTÁ EL CAMBIO: Escala 1.7 (mucho más grande) */
-            transform: scale(1.7) rotate(0deg) !important;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            animation-play-state: paused; /* Detiene el flotado */
-        }
-
-        /* Animación de flotación */
-        @keyframes floating {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-
-        /* Posiciones para PC */
-        .p1 { top: 15%; left: 15%; animation: floating 7s infinite ease-in-out; }
-        .p2 { top: 60%; left: 10%; animation: floating 8s infinite ease-in-out; animation-delay: 1s;}
-        .p3 { top: 15%; right: 15%; animation: floating 6.5s infinite ease-in-out; animation-delay: 0.5s;}
-        .p4 { top: 60%; right: 10%; animation: floating 9s infinite ease-in-out; animation-delay: 1.5s;}
-
-
-        /* --- MEDIA QUERY: AJUSTES PARA CELULAR --- */
-        @media (max-width: 768px) {
-            /* Ajustar el contador */
-            #timer-container { top: 10px; padding: 8px 15px; }
-            #timer { font-size: 14px; }
-            
-            /* Reducir un poco el sobre */
-            .envelope-wrapper { transform: scale(0.85); }
-            .open .letter { transform: translateY(-110px); height: 250px; }
-
-            /* Reubicar las fotos para que no tapen el sobre en pantalla vertical */
-            .photo { width: 110px; /* Más pequeñas de base */ }
-            .photo img { height: 100px; }
-            
-            /* Posiciones estratégicas en las esquinas */
-            .p1 { top: 12%; left: 5%; animation-duration: 8s; }
-            .p2 { top: auto; bottom: 15%; left: 5%; animation-duration: 9s;} /* Abajo izquierda */
-            .p3 { top: 12%; right: 5%; animation-duration: 7s;}
-            .p4 { top: auto; bottom: 15%; right: 5%; animation-duration: 10s;} /* Abajo derecha */
-            
-            /* En celular el "hover" es tocar. Hacemos el zoom un poco menor para que no se salga de pantalla */
-            .photo:hover, .photo:active {
-                transform: scale(1.4) rotate(0deg) !important; 
-            }
-        }
-
-        /* Corazones */
-        .heart { position: absolute; color: #ff5252; font-size: 18px; z-index: 1; animation: moveHeart 5s linear infinite; }
-        @keyframes moveHeart { 0% { transform: translateY(100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
     </style>
 </head>
 <body>
 
     <div id="timer-container">
-        <h2>Llevamos juntos:</h2>
-        <div id="timer">Calculando...</div>
+        <div id="timer">Calculando tiempo...</div>
     </div>
 
-    <div class="photo p1" onclick=""><img src="img/foto1.jpg"><p>Inicio</p></div>
-    <div class="photo p2" onclick=""><img src="img/foto2.jpg"><p>Risas</p></div>
-    <div class="photo p3" onclick=""><img src="img/foto3.jpg"><p>Viajes</p></div>
-    <div class="photo p4" onclick=""><img src="img/foto4.jpg"><p>Amor</p></div>
+    <div class="photo p1"><img src="img/foto1.jpg"><p>Recuerdos</p></div>
+    <div class="photo p2"><img src="img/foto2.jpg"><p>Tus ojos</p></div>
+    <div class="photo p3"><img src="img/foto3.jpg"><p>Nosotros</p></div>
+    <div class="photo p4"><img src="img/foto4.jpg"><p>Te amo</p></div>
 
-    <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
-        <div class="envelope"></div>
+    <div class="envelope-wrapper" id="envelope" onclick="abrirSobre()">
+        <div class="envelope-front"></div>
         <div class="letter">
             <img src="img/nosotros.jpg" alt="Nosotros">
-            <p style="font-family: 'Dancing Script', cursive; font-size: 20px; margin: 8px 0;">¡Feliz cumple mes!</p>
-            <p style="font-size: 12px; color: #555; line-height: 1.3;">
-                Eres mi algoritmo favorito. <br> Gracias por cada momento.
+            <h3>¡Feliz primer mes!</h3>
+            <p>
+                <b>Mi niña hermosa,</b><br>
+                Parece increíble que ya haya pasado un mes desde ese 7 de enero. 
+                Eres la persona que ilumina mis días de estudio y me motiva a ser mejor cada día. 
+                Espero que este sea solo el primer "archivo" de una historia muy larga. ❤️
             </p>
+            <p style="font-size: 11px; color: #888;">(Desliza para leer todo)</p>
         </div>
     </div>
 
     <script>
-        // --- FECHA DE ANIVERSARIO (AÑO, MES-1, DÍA) ---
-        const startDate = new Date(2026, 0, 7, 0, 0); // Enero es 0
+        // --- FECHA DE ANIVERSARIO: 7 de Enero de 2026 ---
+        const startDate = new Date(2026, 0, 7, 0, 0); 
 
         function updateTimer() {
             const now = new Date();
@@ -231,19 +190,48 @@
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const secs = Math.floor((diff % (1000 * 60)) / 1000);
-            document.getElementById('timer').innerHTML = `${days}d ${hours}h ${mins}m ${secs}s`;
+            document.getElementById('timer').innerHTML = `Llevamos juntos: ${days}d ${hours}h ${mins}m ${secs}s`;
         }
         setInterval(updateTimer, 1000);
 
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
+        function abrirSobre() {
+            const env = document.getElementById('envelope');
+            if(!env.classList.contains('open')) {
+                env.classList.add('open');
+                lanzarConfeti();
+            } else {
+                env.classList.remove('open');
+            }
         }
-        setInterval(createHeart, 400);
+
+        function lanzarConfeti() {
+            for(let i=0; i<50; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = '50%';
+                c.style.top = '50%';
+                c.style.backgroundColor = ['#ff5252', '#ff8a80', '#ffd740', '#ffffff'][Math.floor(Math.random()*4)];
+                document.body.appendChild(c);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 10 + 5;
+                let x = 0, y = 0;
+                let gravity = 0.5;
+                let vx = Math.cos(angle) * velocity;
+                let vy = Math.sin(angle) * velocity - 10;
+
+                const move = setInterval(() => {
+                    x += vx;
+                    y += vy;
+                    vy += gravity;
+                    c.style.transform = `translate(${x}px, ${y}px) rotate(${x}deg)`;
+                    if(y > window.innerHeight) {
+                        clearInterval(move);
+                        c.remove();
+                    }
+                }, 20);
+            }
+        }
     </script>
 </body>
 </html>
