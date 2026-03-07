@@ -179,6 +179,7 @@
 
     <div id="timer-container">
         <div id="timer">Cargando nuestro tiempo...</div>
+        <div id="timer-meet" style="margin-top: 5px; border-top: 1px solid #eee; pt-2; font-size: 11px; color: #888;">Cargando encuentro...</div>
     </div>
 
     <div id="music-controls">
@@ -224,6 +225,7 @@
 
     <script>
         const startDate = new Date(2026, 0, 7, 0, 0); 
+        const meetDate = new Date(2025, 9, 31, 0, 0);
         const TOTAL_FOTOS = 19; 
 
         // --- PLAYLIST CONFIGURADA CON TUS ARCHIVOS ---
@@ -293,12 +295,19 @@
 
         function updateTimer() {
             const now = new Date();
-            const diff = now - startDate;
-            const d = Math.floor(diff / (1000*60*60*24));
-            const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-            const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-            const s = Math.floor((diff % (1000*60)) / 1000);
-            document.getElementById('timer').innerHTML = `Llevamos: ${d}d ${h}h ${m}m ${s}s`;
+            
+            // Función auxiliar para calcular y formatear
+            const getDiff = (targetDate) => {
+                const diff = now - targetDate;
+                const d = Math.floor(diff / (1000*60*60*24));
+                const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+                const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+                const s = Math.floor((diff % (1000*60)) / 1000);
+                return `${d}d ${h}h ${m}m ${s}s`;
+            };
+
+            document.getElementById('timer').innerHTML = `Llevamos juntos: ${getDiff(startDate)}`;
+            document.getElementById('timer-meet').innerHTML = `Desde que nos vimos: ${getDiff(meetDate)}`;
         }
 
         function createHeart() {
