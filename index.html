@@ -227,13 +227,41 @@
         const startDate = new Date(2026, 0, 7, 0, 0); 
         const meetDate = new Date(2025, 9, 31, 0, 0);
         
-        // ¡Aquí está tu nueva lista de fotos con los nombres exactos de tu carpeta!
+        // --- LISTA COMPLETA DE 45 FOTOS ---
         const misFotos = [
             "foto1.jpeg", "foto2.jpeg", "foto3.jpeg", "foto4.jpeg",
             "foto5.jpeg", "foto6.jpeg", "foto7.jpeg", "foto8.jpeg",
             "foto9.jpeg", "foto12.jpeg", "foto13.jpeg", "foto14.jpeg",
             "foto15.jpeg", "foto16.jpeg", "foto17.jpeg", "foto18.jpeg",
-            "foto19.jpeg"
+            "foto19.jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.53.jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.54 (1).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.54 (2).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.54 (3).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.54.jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.55 (1).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.55 (2).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.55 (3).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.55 (4).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.55.jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.56 (1).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.56 (2).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.56 (3).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.56 (4).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.56 (5).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.56.jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.57 (1).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.57 (2).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.57 (3).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.57 (4).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.57.jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.58 (1).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.58 (2).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.58 (3).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.58 (4).jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.58.jpeg",
+            "WhatsApp Image 2026-04-07 at 01.24.59.jpeg",
+            "WhatsApp Image 2026-04-07 at 01.25.17.jpeg"
         ];
 
         // --- PLAYLIST CONFIGURADA CON TUS ARCHIVOS ---
@@ -275,14 +303,21 @@
 
         player.addEventListener('ended', nextSong);
 
-        // --- NUEVA FUNCIÓN DE GALERÍA ---
+        // --- FUNCIÓN DE GALERÍA (Adaptada para más fotos) ---
         function generarGaleria() {
             const container = document.getElementById('gallery-container');
             const isMobile = window.innerWidth <= 768;
+            
+            // Los espacios detrás del sobre y dedicatoria NO se llenan con fotos.
             const excludedMobile = [8, 9, 10, 11, 12, 13]; 
             const excludedPC = [9,10,11, 16,17,18, 23,24,25];
             const excluded = isMobile ? excludedMobile : excludedPC;
-            const totalCells = isMobile ? 24 : 35;
+            
+            // Necesitamos suficientes celdas para todas las fotos.
+            // Para PC (7 columnas): 7x9 = 63 celdas. 
+            // Para Móvil (2 columnas): 2x26 = 52 celdas.
+            const totalCells = isMobile ? 52 : 63;
+            if (isMobile) container.style.height = "250vh"; // Ajustar altura móvil
 
             let photoIndex = 0; // Empezamos a contar desde 0 para la lista
 
@@ -298,7 +333,7 @@
                     photo.style.setProperty('--r', r + 'deg');
                     photo.style.animationDelay = (Math.random() * 5) + 's';
                     
-                    // Cargamos el nombre exacto desde nuestra lista
+                    // Cargamos el nombre exacto desde nuestra lista, incluyendo las nuevas
                     photo.innerHTML = `<img src="img/${misFotos[photoIndex]}" alt="Nuestros recuerdos">`;
                     slot.appendChild(photo);
                     
