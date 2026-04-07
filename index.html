@@ -79,7 +79,7 @@
         }
         #timer { font-weight: 600; color: #444; font-size: 13px; }
 
-        /* --- REPRODUCTOR MÚSICA --- */
+        /* --- REPRODUCTOR MÚSICA Y PLAYLIST --- */
         #music-controls {
             position: fixed; bottom: 20px; right: 20px; z-index: 6000;
             display: flex; flex-direction: column; align-items: center; gap: 10px;
@@ -88,10 +88,35 @@
             background: white; border: none; width: 45px; height: 45px;
             border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s;
         }
+        .music-btn:hover { transform: scale(1.1); }
+        
         #song-title {
-            background: rgba(255, 255, 255, 0.8); padding: 5px 12px; border-radius: 10px; 
+            background: rgba(255, 255, 255, 0.9); padding: 5px 12px; border-radius: 10px; 
             font-size: 10px; color: var(--color-tapa); font-weight: bold; display: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #playlist-panel {
+            position: fixed; bottom: 80px; right: 80px; width: 250px; max-height: 300px;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 15px;
+            z-index: 5900; display: none; flex-direction: column; overflow-y: auto;
+        }
+
+        #playlist-panel::-webkit-scrollbar { width: 6px; }
+        #playlist-panel::-webkit-scrollbar-thumb { background: var(--color-sobre); border-radius: 10px; }
+        #playlist-list { list-style: none; padding: 0; margin: 0; }
+        
+        .playlist-item {
+            padding: 8px 10px; border-bottom: 1px solid #eee; font-size: 11px;
+            color: #555; cursor: pointer; transition: background 0.2s; border-radius: 5px;
+        }
+        .playlist-item:hover { background: rgba(255, 82, 82, 0.1); }
+        .playlist-item.active {
+            background: rgba(255, 82, 82, 0.15); font-weight: 600;
+            color: var(--color-tapa); border-left: 3px solid var(--color-tapa);
         }
 
         /* --- GALERÍA --- */
@@ -118,41 +143,20 @@
 
         /* --- CONTENEDOR DE SOBRES --- */
         .envelopes-container {
-            display: flex;
-            gap: 50px;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
+            display: flex; gap: 50px; justify-content: center; align-items: center;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;
         }
 
         .envelope-wrapper {
-            position: relative;
-            width: 220px;
-            height: 150px;
-            background: var(--color-sobre);
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: transform 0.3s ease;
+            position: relative; width: 220px; height: 150px; background: var(--color-sobre);
+            border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.3s ease;
         }
         
         .envelope-date {
-            position: absolute;
-            top: -35px;
-            width: 100%;
-            text-align: center;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            color: var(--color-tapa);
-            background: white;
-            padding: 2px 0;
-            border-radius: 15px;
-            font-size: 14px;
+            position: absolute; top: -35px; width: 100%; text-align: center;
+            font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--color-tapa);
+            background: white; padding: 2px 0; border-radius: 15px; font-size: 14px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
@@ -170,10 +174,8 @@
 
         /* --- CARTAS --- */
         .letter {
-            position: absolute; bottom: 5px; left: 5px;
-            width: 210px; height: 140px; background: white;
-            z-index: 20; padding: 12px; box-sizing: border-box;
-            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute; bottom: 5px; left: 5px; width: 210px; height: 140px; background: white;
+            z-index: 20; padding: 12px; box-sizing: border-box; transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 5px; opacity: 0; visibility: hidden;
         }
 
@@ -183,8 +185,7 @@
 
         .open::before { transform: rotateX(180deg); z-index: 10; }
         .open .letter {
-            transform: translateY(-110px) scale(1.4);
-            z-index: 4000; opacity: 1; visibility: visible;
+            transform: translateY(-110px) scale(1.4); z-index: 4000; opacity: 1; visibility: visible;
             height: 300px; box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
         .letter img { display: block; margin: 0 auto 10px; width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-fondo); }
@@ -195,6 +196,7 @@
             #gallery-container { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(12, 1fr); height: 250vh; padding: 100px 20px; gap: 25px; }
             .photo { width: 130px; } .photo img { height: 110px; }
             #main-dedication { top: auto; bottom: 120px; font-size: 26px; }
+            #playlist-panel { right: 20px; width: 220px; }
         }
 
         @keyframes floating {
@@ -215,10 +217,16 @@
         <div id="timer-meet" style="margin-top: 5px; border-top: 1px solid #eee; pt-2; font-size: 11px; color: #888;">Cargando encuentro...</div>
     </div>
 
+    <div id="playlist-panel">
+        <div style="font-weight: bold; margin-bottom: 10px; color: var(--color-tapa); text-align: center; font-family: 'Dancing Script', cursive; font-size: 20px;">Nuestra Playlist 🎧</div>
+        <ul id="playlist-list"></ul>
+    </div>
+
     <div id="music-controls">
         <span id="song-title"></span>
-        <button class="music-btn" id="btn-next" onclick="nextSong()">⏭️</button>
-        <button class="music-btn" id="btn-play" onclick="toggleMusic()">🎵</button>
+        <button class="music-btn" id="btn-playlist" onclick="togglePlaylist()" title="Ver lista de canciones">📋</button>
+        <button class="music-btn" id="btn-next" onclick="nextSong()" title="Siguiente canción">⏭️</button>
+        <button class="music-btn" id="btn-play" onclick="toggleMusic()" title="Reproducir/Pausar">🎵</button>
     </div>
 
     <div id="gallery-container"></div>
@@ -230,49 +238,25 @@
             <div class="letter">
                 <div class="letter-content">
                     <img src="img/nosotros.jpeg" alt="Nosotros">
-                    <h3 style="text-align: center; font-family: 'Dancing Script', cursive; font-size: 18px; color: var(--color-tapa); margin: 0 0 8px 0;">Nuestro primer mes</h3>
+                    <h3 style="text-align: center; font-family: 'Dancing Script', cursive; font-size: 18px; color: var(--color-tapa); margin: 0 0 8px 0;">¡Feliz primer mes!</h3>
                     <p>
- Me robé un pedacito de internet para escribirte algo bonito, ya que hoy nos toca vivir este momento de forma virtual. Pero déjame decirte que, aunque estemos a la distancia, te siento más cerca que nunca. Te amo mucho.<br><br>
-
-                    
-
-                    Ojalá no te parezca muy "mamón" esto, mi amor, pero va con todo mi cariño. <br><br>
-
-
-
-                    <span class="name-style">Justine</span>, parece increíble que ya haya pasado un mes desde que comenzamos esta linda aventura; desde que te conocí, ¡el tiempo a tu lado pasa volando! <br><br>
-
-                    
-
-                    Cada día ha sido especial. He podido conocer tu lado tierno y vulnerable, tus delirios y la cotidianidad compartiendo con tu familia. Sin duda, cada día me enamoro más de ti y de tu forma de ser con la gente que te rodea.<br><br>
-
-
-
-                    Eres una persona hermosa que siempre se preocupa por los demás; eres atenta, cariñosa y contagias alegría con tu sonrisa (y tus delirios, JAJAJA). Valoro muchísimo que estés presente en mi vida.<br><br>
-
-
-
-                    Como tú sabes, genuinamente me gusta sacar fotos y guardar todos nuestros momentos. Siempre las veo para recordar lo feliz que me haces a diario, y ojalá estas fotos también te recuerden lo mismo a ti.<br><br>
-
-
-
-                    Gracias por estar conmigo y por cada momento compartido. <br><br>
-
-                    <span style="display: block; text-align: center;">
-
-                        <b>Te amo <br> <span class="name-style">Justine</span> ❤️</b>
-
-                    </span>
-
-                </p>
-
-                <p style="font-size: 11px; color: #aaa; margin-top: 15px; text-align: center;">(Con mucho cariño, Cristian.)</p>
-
+                        <b>Mi niña hermosa, <span class="name-style">Justine</span> ❤️</b><br><br>
+                        Me robé un pedacito de internet para escribirte algo bonito, ya que hoy nos toca vivir este momento de forma virtual. Pero déjame decirte que, aunque estemos a la distancia, te siento más cerca que nunca. Te amo mucho.<br><br>
+                        Ojalá no te parezca muy "mamón" esto, mi amor, pero va con todo mi cariño.<br><br>
+                        <span class="name-style">Justine</span>, parece increíble que ya haya pasado un mes desde que comenzamos esta linda aventura; desde que te conocí, ¡el tiempo a tu lado pasa volando! <br><br>
+                        Cada día ha sido especial. He podido conocer tu lado tierno y vulnerable, tus delirios y la cotidianidad compartiendo con tu familia. Sin duda, cada día me enamoro más de ti y de tu forma de ser con la gente que te rodea.<br><br>
+                        Eres una persona hermosa que siempre se preocupa por los demás; eres atenta, cariñosa y contagias alegría con tu sonrisa (y tus delirios, JAJAJA). Valoro muchísimo que estés presente en mi vida.<br><br>
+                        Como tú sabes, genuinamente me gusta sacar fotos y guardar todos nuestros momentos. Siempre las veo para recordar lo feliz que me haces a diario, y ojalá estas fotos también te recuerden lo mismo a ti.<br><br>
+                        Gracias por estar conmigo y por cada momento compartido.<br><br>
+                        <span style="display: block; text-align: center;">
+                            <b>Te amo <br> <span class="name-style">Justine</span> ❤️</b>
+                        </span>
+                        <br>
+                        <span style="display: block; font-size: 11px; color: #aaa; text-align: center;">(Con mucho cariño, Cristian.)</span>
+                    </p>
+                </div>
             </div>
-
         </div>
-
-    </div>
 
         <div class="envelope-wrapper" id="envelope2" onclick="manejarApertura('envelope2')">
             <div class="envelope-date">07/04/2026</div>
@@ -292,6 +276,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
     <div id="main-dedication">Para Justine ❤️</div>
 
@@ -335,20 +320,14 @@
             "WhatsApp Image 2026-04-07 at 01.25.17.jpeg"
         ];
 
-// --- PLAYLIST CONFIGURADA CON TUS ARCHIVOS ---
         const playlist = [
-            // 1. Las nuevas en tu orden específico
             { title: "Hailey - Justin Bieber", src: "audio/Justin Bieber - Hailey (SPOTISAVER).mp3" },
             { title: "Iris - The Goo Goo Dolls", src: "audio/The Goo Goo Dolls - Iris (SPOTISAVER).mp3" },
             { title: "Buscarte Lejos - Duki, Bizarrap", src: "audio/Duki, Bizarrap - Buscarte Lejos (SPOTISAVER).mp3" },
             { title: "It Ain't Over 'Til It's Over - Lenny Kravitz", src: "audio/Lenny Kravitz - It Ain't Over 'Til It's Over (SPOTISAVER).mp3" },
             { title: "High and Dry - Radiohead", src: "audio/Radiohead - High and Dry (SPOTISAVER).mp3" },
-            
-            // 2. El resto de las nuevas
             { title: "She Will Be Loved - Maroon 5", src: "audio/Maroon 5 - She Will Be Loved - Radio Mix (SPOTISAVER).mp3" },
             { title: "Every Breath You Take - The Police", src: "audio/The Police - Every Breath You Take (SPOTISAVER).mp3" },
-            
-            // 3. Las antiguas en su orden original
             { title: "Un Amor Violento - Los Tres", src: "audio/Los Tres - Un Amor Violento.mp3" },
             { title: "Hablar de Ti - Gepe", src: "audio/Gepe - Hablar de Ti.mp3" },
             { title: "Sparks - Coldplay", src: "audio/Coldplay - Sparks.mp3" },
@@ -360,9 +339,47 @@
         const btnPlay = document.getElementById('btn-play');
         const songTitleDisplay = document.getElementById('song-title');
 
+        // --- FUNCIONES DE PLAYLIST ---
+        function inicializarPlaylist() {
+            const listContainer = document.getElementById('playlist-list');
+            listContainer.innerHTML = ''; 
+            playlist.forEach((song, index) => {
+                const li = document.createElement('li');
+                li.className = 'playlist-item';
+                li.innerText = `${index + 1}. ${song.title}`;
+                
+                li.onclick = () => {
+                    currentSongIndex = index;
+                    loadSong(currentSongIndex);
+                    player.play();
+                    btnPlay.innerText = "⏸️";
+                    songTitleDisplay.style.display = "block";
+                };
+                listContainer.appendChild(li);
+            });
+        }
+
+        function togglePlaylist() {
+            const panel = document.getElementById('playlist-panel');
+            if (panel.style.display === 'flex') {
+                panel.style.display = 'none';
+            } else {
+                panel.style.display = 'flex';
+            }
+        }
+
         function loadSong(index) {
             player.src = playlist[index].src;
             songTitleDisplay.innerText = playlist[index].title;
+            
+            const items = document.querySelectorAll('.playlist-item');
+            items.forEach((item, i) => {
+                if(i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
         }
 
         function toggleMusic() {
@@ -386,13 +403,11 @@
 
         player.addEventListener('ended', nextSong);
 
-function generarGaleria() {
+        function generarGaleria() {
             const container = document.getElementById('gallery-container');
             const isMobile = window.innerWidth <= 768;
             
             const excludedMobile = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; 
-            // ¡AQUÍ ESTÁ LA CORRECCIÓN! 
-            // Excluimos exactamente las 3 columnas centrales para lograr simetría perfecta
             const excludedPC = [9, 10, 11, 16, 17, 18, 23, 24, 25, 30, 31, 32];
             const excluded = isMobile ? excludedMobile : excludedPC;
             
@@ -403,14 +418,12 @@ function generarGaleria() {
             for (let i = 0; i < totalCells; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'photo-slot';
-                
                 if (!excluded.includes(i) && photoIndex < misFotos.length) {
                     const photo = document.createElement('div');
                     photo.className = 'photo';
                     const r = (Math.random() * 10) - 5;
                     photo.style.setProperty('--r', r + 'deg');
                     photo.style.animationDelay = (Math.random() * 5) + 's';
-                    
                     photo.innerHTML = `<img src="img/${misFotos[photoIndex]}" alt="Nuestros recuerdos">`;
                     slot.appendChild(photo);
                     photoIndex++;
@@ -447,7 +460,6 @@ function generarGaleria() {
         function manejarApertura(id) {
             const env = document.getElementById(id);
             if(!env.classList.contains('open')) {
-                // Cerrar otros si estuvieran abiertos
                 document.querySelectorAll('.envelope-wrapper').forEach(e => e.classList.remove('open'));
                 env.classList.add('open');
                 lanzarConfeti();
@@ -476,7 +488,8 @@ function generarGaleria() {
 
         window.onload = () => {
             generarGaleria();
-            loadSong(0);
+            inicializarPlaylist(); 
+            loadSong(0); 
             setInterval(updateTimer, 1000);
             setInterval(createHeart, 450);
             updateTimer();
