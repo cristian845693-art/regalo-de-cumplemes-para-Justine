@@ -226,7 +226,15 @@
     <script>
         const startDate = new Date(2026, 0, 7, 0, 0); 
         const meetDate = new Date(2025, 9, 31, 0, 0);
-        const TOTAL_FOTOS = 19; 
+        
+        // ¡Aquí está tu nueva lista de fotos con los nombres exactos de tu carpeta!
+        const misFotos = [
+            "foto1.jpeg", "foto2.jpeg", "foto3.jpeg", "foto4.jpeg",
+            "foto5.jpeg", "foto6.jpeg", "foto7.jpeg", "foto8.jpeg",
+            "foto9.jpeg", "foto12.jpeg", "foto13.jpeg", "foto14.jpeg",
+            "foto15.jpeg", "foto16.jpeg", "foto17.jpeg", "foto18.jpeg",
+            "foto19.jpeg"
+        ];
 
         // --- PLAYLIST CONFIGURADA CON TUS ARCHIVOS ---
         const playlist = [
@@ -267,6 +275,7 @@
 
         player.addEventListener('ended', nextSong);
 
+        // --- NUEVA FUNCIÓN DE GALERÍA ---
         function generarGaleria() {
             const container = document.getElementById('gallery-container');
             const isMobile = window.innerWidth <= 768;
@@ -275,19 +284,25 @@
             const excluded = isMobile ? excludedMobile : excludedPC;
             const totalCells = isMobile ? 24 : 35;
 
-            let photoIndex = 1;
+            let photoIndex = 0; // Empezamos a contar desde 0 para la lista
+
             for (let i = 0; i < totalCells; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'photo-slot';
-                if (!excluded.includes(i) && photoIndex <= TOTAL_FOTOS) {
+                
+                // Mientras no sea un espacio excluido y queden fotos en la lista
+                if (!excluded.includes(i) && photoIndex < misFotos.length) {
                     const photo = document.createElement('div');
                     photo.className = 'photo';
                     const r = (Math.random() * 10) - 5;
                     photo.style.setProperty('--r', r + 'deg');
                     photo.style.animationDelay = (Math.random() * 5) + 's';
-                    photo.innerHTML = `<img src="img/foto${photoIndex}.jpeg" alt="Foto ${photoIndex}">`;
+                    
+                    // Cargamos el nombre exacto desde nuestra lista
+                    photo.innerHTML = `<img src="img/${misFotos[photoIndex]}" alt="Nuestros recuerdos">`;
                     slot.appendChild(photo);
-                    photoIndex++;
+                    
+                    photoIndex++; // Pasamos a la siguiente foto
                 }
                 container.appendChild(slot);
             }
@@ -296,7 +311,6 @@
         function updateTimer() {
             const now = new Date();
             
-            // Función auxiliar para calcular y formatear
             const getDiff = (targetDate) => {
                 const diff = now - targetDate;
                 const d = Math.floor(diff / (1000*60*60*24));
